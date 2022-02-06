@@ -11,6 +11,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -131,22 +132,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 val resultList = remember {
                     mutableStateListOf<Result>()
                 }
-                val coilLoader = remember {
-                    ImageLoader.invoke(context).newBuilder()
-                        .componentRegistry {
-                            add(
-                                if (Build.VERSION.SDK_INT >= 28) {
-                                    ImageDecoderDecoder(
-                                        context,
-                                        enforceMinimumFrameDelay = true
-                                    )
-                                } else {
-                                    GifDecoder()
-                                }
-                            )
-                        }
-                        .build()
-                }
 
                 AnimatedContent(
                     targetState = verticalSwipeEnabled,
@@ -159,7 +144,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             itemSpacing = 8.dp,
                             contentPadding = PaddingValues(vertical = 16.dp)
                         ) { page ->
-                            Page(coilLoader, resultList, page)
+                            Page(page, resultList)
                         }
                     } else {
                         HorizontalPager(
@@ -167,18 +152,23 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             itemSpacing = 8.dp,
                             contentPadding = PaddingValues(vertical = 16.dp)
                         ) { page ->
-                            Page(coilLoader, resultList, page)
+                            Page(page, resultList)
                         }
                     }
                 }
 
 
-                NavigationButtons(
+                BoxWithConstraints(
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
+                        .fillMaxWidth()
                         .weight(1f),
-                    pagerState, verticalSwipeEnabled
-                )
+                    contentAlignment = Alignment.Center
+                ) {
+                    NavigationButtons(
+                        modifier = Modifier,
+                        pagerState, verticalSwipeEnabled
+                    )
+                }
 
                 LaunchedEffect(Unit) {
                     autoAddNewData(context, pageNum, pagerState, webPageId, resultList)
@@ -195,49 +185,57 @@ private fun NavigationButtons(
     verticalSwipeEnabled: Boolean
 ) {
     val scope = rememberCoroutineScope()
-    Row(
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(
-            8.dp,
-            alignment = Alignment.CenterHorizontally
-        )
+    Surface(
+        modifier = modifier,
+        shadowElevation = 1.dp,
+        shape = CircleShape
     ) {
-        IconButton(
-            onClick = {
-                scope.launch {
-                    pagerState.animateScrollToPage(
-                        page = (pagerState.currentPage - 1).coerceAtLeast(
-                            0
+
+        Row(
+            modifier = Modifier,
+            horizontalArrangement = Arrangement.spacedBy(
+                8.dp,
+                alignment = Alignment.CenterHorizontally
+            )
+        ) {
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(
+                            page = (pagerState.currentPage - 1).coerceAtLeast(
+                                0
+                            )
                         )
+                    }
+                },
+                enabled = pagerState.currentPage > 0 && pagerState.targetPage > 0
+            ) {
+                AnimatedContent(targetState = verticalSwipeEnabled) {
+                    Icon(
+                        imageVector = if (it) Icons.Rounded.KeyboardArrowUp else Icons.Rounded.KeyboardArrowLeft,
+                        contentDescription = "Go back",
                     )
                 }
-            },
-            enabled = pagerState.currentPage > 0 && pagerState.targetPage > 0
-        ) {
-            AnimatedContent(targetState = verticalSwipeEnabled) {
-                Icon(
-                    imageVector = if (it) Icons.Rounded.KeyboardArrowUp else Icons.Rounded.KeyboardArrowLeft,
-                    contentDescription = "Go back"
-                )
             }
-        }
 
-        IconButton(onClick = {
-            scope.launch {
-                pagerState.animateScrollToPage(
-                    page = (pagerState.currentPage + 1).coerceAtMost(
-                        pagerState.pageCount - 1
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(
+                            page = (pagerState.currentPage + 1).coerceAtMost(
+                                pagerState.pageCount - 1
+                            )
+                        )
+                    }
+                },
+                enabled = pagerState.pageCount != 0 && pagerState.currentPage != pagerState.pageCount - 1
+            ) {
+                AnimatedContent(targetState = verticalSwipeEnabled) {
+                    Icon(
+                        imageVector = if (it) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowRight,
+                        contentDescription = "Go forward"
                     )
-                )
-            }
-        }) {
-            AnimatedContent(targetState = verticalSwipeEnabled) {
-                Icon(
-                    imageVector = if (it) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowRight,
-                    contentDescription = "Go forward"
-                )
+                }
             }
         }
     }
@@ -245,10 +243,26 @@ private fun NavigationButtons(
 
 @Composable
 private fun Page(
-    coilLoader: ImageLoader,
-    resultList: SnapshotStateList<Result>,
-    page: Int
+    page: Int,
+    resultList: SnapshotStateList<Result>
 ) {
+    val context = LocalContext.current
+    val coilLoader = remember {
+        ImageLoader.invoke(context).newBuilder()
+            .componentRegistry {
+                add(
+                    if (Build.VERSION.SDK_INT >= 28) {
+                        ImageDecoderDecoder(
+                            context,
+                            enforceMinimumFrameDelay = true
+                        )
+                    } else {
+                        GifDecoder()
+                    }
+                )
+            }
+            .build()
+    }
     Surface(
         modifier = Modifier
             .padding(8.dp)
@@ -256,9 +270,7 @@ private fun Page(
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 1.dp
     ) {
-        Column(
-            modifier = Modifier
-        ) {
+        Column {
 
             CoilGifImage(
                 imageLoader = coilLoader,
