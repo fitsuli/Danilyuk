@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.DevelopersLifeViewer" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Workaround for Preference asking for AppCompat styles-->
+    <style name="TextAppearance.AppCompat.Body2" parent="android:TextAppearance.Material.Body2" />
+</resources>
