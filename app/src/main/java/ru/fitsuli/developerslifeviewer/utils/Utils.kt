@@ -1,6 +1,9 @@
+@file:Suppress("unused")
+
 package ru.fitsuli.developerslifeviewer.utils
 
 import android.content.Context
+import android.content.Intent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Cache
@@ -34,4 +37,16 @@ suspend fun Context.downloadJsonStr(url: String): String? = withContext(Dispatch
         val response = client.newCall(request).execute()
         response.body?.string()
     }.getOrNull()
+}
+
+fun Context.shareLink(link: String) {
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(
+            Intent.EXTRA_TEXT,
+            link
+        )
+        type = "text/plain"
+    }
+    startActivity(Intent.createChooser(sendIntent, "Share To:"))
 }

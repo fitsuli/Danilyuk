@@ -17,10 +17,7 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.KeyboardArrowLeft
-import androidx.compose.material.icons.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -46,6 +43,7 @@ import ru.fitsuli.developerslifeviewer.utils.DLifeData
 import ru.fitsuli.developerslifeviewer.utils.Result
 import ru.fitsuli.developerslifeviewer.utils.Utils.Companion.Pages
 import ru.fitsuli.developerslifeviewer.utils.downloadJsonStr
+import ru.fitsuli.developerslifeviewer.utils.shareLink
 
 
 @Composable
@@ -166,7 +164,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 ) {
                     NavigationButtons(
                         modifier = Modifier,
-                        pagerState, verticalSwipeEnabled
+                        pagerState, verticalSwipeEnabled,
+                        resultList
                     )
                 }
 
@@ -182,8 +181,10 @@ fun MainScreen(modifier: Modifier = Modifier) {
 private fun NavigationButtons(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    verticalSwipeEnabled: Boolean
+    verticalSwipeEnabled: Boolean,
+    resultList: SnapshotStateList<Result>
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     Surface(
         modifier = modifier,
@@ -216,6 +217,12 @@ private fun NavigationButtons(
                         contentDescription = "Go back",
                     )
                 }
+            }
+
+            IconButton(onClick = {
+                context.shareLink("https://developerslife.ru/${resultList[pagerState.currentPage].id}")
+            }) {
+                Icon(imageVector = Icons.Rounded.Share, contentDescription = "Share")
             }
 
             IconButton(
