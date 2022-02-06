@@ -5,4 +5,5 @@
     <string name="hot">Горячее</string>
     <string name="latest">Последнее</string>
     <string name="top">Лучшее</string>
+    <string name="share_to">Отправить:</string>
 </resources>

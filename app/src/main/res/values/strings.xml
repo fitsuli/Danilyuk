@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">DLViewer</string>
+    <string name="app_name" translatable="false">DLViewer</string>
     <string name="votes">votes</string>
     <string name="random">Random</string>
     <string name="hot">Hot</string>
     <string name="latest">Latest</string>
     <string name="top">Top</string>
+    <string name="share_to">Share to:</string>
 </resources>

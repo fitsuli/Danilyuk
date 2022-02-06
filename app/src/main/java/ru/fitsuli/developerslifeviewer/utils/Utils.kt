@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import ru.fitsuli.developerslifeviewer.R
 import java.io.File
 
 class Utils {
@@ -48,5 +49,5 @@ fun Context.shareLink(link: String) {
         )
         type = "text/plain"
     }
-    startActivity(Intent.createChooser(sendIntent, "Share To:"))
+    startActivity(Intent.createChooser(sendIntent, getString(R.string.share_to)))
 }
