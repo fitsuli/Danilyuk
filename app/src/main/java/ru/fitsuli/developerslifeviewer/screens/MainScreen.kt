@@ -188,7 +188,7 @@ private fun NavigationButtons(
     val scope = rememberCoroutineScope()
     Surface(
         modifier = modifier,
-        shadowElevation = 1.dp,
+        tonalElevation = 1.dp,
         shape = CircleShape
     ) {
 
@@ -199,6 +199,7 @@ private fun NavigationButtons(
                 alignment = Alignment.CenterHorizontally
             )
         ) {
+            val isEnabledPrev by remember { derivedStateOf { pagerState.currentPage > 0 && pagerState.targetPage > 0 } }
             IconButton(
                 onClick = {
                     scope.launch {
@@ -209,7 +210,7 @@ private fun NavigationButtons(
                         )
                     }
                 },
-                enabled = pagerState.currentPage > 0 && pagerState.targetPage > 0
+                enabled = isEnabledPrev
             ) {
                 AnimatedContent(targetState = verticalSwipeEnabled) {
                     Icon(
@@ -225,6 +226,7 @@ private fun NavigationButtons(
                 Icon(imageVector = Icons.Rounded.Share, contentDescription = "Share")
             }
 
+            val isEnabledNext by remember { derivedStateOf { pagerState.pageCount != 0 && pagerState.currentPage != pagerState.pageCount - 1 } }
             IconButton(
                 onClick = {
                     scope.launch {
@@ -235,7 +237,7 @@ private fun NavigationButtons(
                         )
                     }
                 },
-                enabled = pagerState.pageCount != 0 && pagerState.currentPage != pagerState.pageCount - 1
+                enabled = isEnabledNext
             ) {
                 AnimatedContent(targetState = verticalSwipeEnabled) {
                     Icon(
@@ -275,7 +277,7 @@ private fun Page(
             .padding(8.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        shadowElevation = 1.dp
+        tonalElevation = 1.dp
     ) {
         Column {
 

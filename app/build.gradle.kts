@@ -4,8 +4,8 @@ plugins {
     kotlin("plugin.serialization")
 }
 
-val composeVersion = "1.2.0-alpha02"
-val accompanistVersion = "0.24.1-alpha"
+val composeVersion = "1.3.0-alpha01"
+val accompanistVersion = "0.24.13-rc"
 
 android {
     compileSdk = 32
@@ -50,12 +50,12 @@ android {
         resources.excludes.add("kotlin-tooling-metadata.json")
     }
 
-    composeOptions.kotlinCompilerExtensionVersion = composeVersion
+    composeOptions.kotlinCompilerExtensionVersion = "1.2.0"
     kotlinOptions.jvmTarget = "11"
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.preference:preference-ktx:1.2.0") {
         exclude(group = "androidx.appcompat")
         exclude(group = "androidx.fragment")
@@ -68,15 +68,15 @@ dependencies {
         exclude(group = "androidx.slidingpanelayout")
     }
 
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
-    implementation("androidx.lifecycle:lifecycle-common:2.4.0")
-    implementation("androidx.core:core-splashscreen:1.0.0-beta01")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
+    implementation("androidx.lifecycle:lifecycle-common:2.5.0")
+    implementation("androidx.core:core-splashscreen:1.0.0-rc01")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
     // Compose
-    implementation("androidx.activity:activity-compose:1.4.0")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha04")
+    implementation("androidx.activity:activity-compose:1.6.0-alpha05")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha14")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.animation:animation:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")

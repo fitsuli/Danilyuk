@@ -8,9 +8,9 @@ buildscript {
         maven { url = uri("https://jitpack.io") }
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.2.0-beta01")
-        classpath(kotlin("gradle-plugin", version = "1.6.10"))
-        classpath(kotlin("serialization", version = "1.6.10"))
+        classpath("com.android.tools.build:gradle:7.3.0-beta05")
+        classpath(kotlin("gradle-plugin", version = "1.7.0"))
+        classpath(kotlin("serialization", version = "1.7.0"))
     }
 }
 
